@@ -70,7 +70,7 @@
   .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
   .grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     border-top: 1px solid var(--border);
     border-left: 1px solid var(--border);
   }
@@ -86,7 +86,9 @@
   }
   .day {
     position: relative;
+    min-width: 0;
     min-height: 50px;
+    overflow: hidden;
     border-right: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     padding: 3px 4px;
@@ -171,7 +173,7 @@
   <div id="app"></div>
 
 <script>
-const COLORS = ["#579DFF", "#4FC1A6", "#E0975C", "#C77DBD", "#F2994A", "#9B9A97"];
+const COLORS = ["#579DFF", "#E11432", "#E0975C", "#C77DBD", "#F2994A", "#9B9A97"];
 const DAY_NAMES = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
 const MONTH_NAMES = ["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"];
 const MAX_DOTS = 4;
