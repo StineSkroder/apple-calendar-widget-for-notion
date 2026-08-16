@@ -86,7 +86,7 @@
   }
   .day {
     position: relative;
-    min-height: 38px;
+    min-height: 50px;
     border-right: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     padding: 3px 4px;
@@ -105,7 +105,17 @@
     border-radius: 50%;
   }
   .day-num.today { background: var(--today-bg); color: var(--today-text); font-weight: 600; }
-  .dots { display: flex; align-items: center; gap: 3px; margin-top: 3px; flex-wrap: wrap; }
+  .event-text {
+    font-size: 10px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 3px;
+    line-height: 1.5;
+  }
+  .dots { display: flex; align-items: center; gap: 3px; margin-top: 2px; flex-wrap: wrap; }
   .dot-event { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
   .more-badge { font-size: 8px; color: var(--text-muted); }
   .empty-state {
@@ -343,15 +353,20 @@ async function render() {
     const inMonth = cursor.getMonth() === viewDate.getMonth();
     const key = isoDate(cursor);
     const dayEvents = eventsByDayMap[key] || [];
-    const shownDots = dayEvents.slice(0, MAX_DOTS);
-    const overflow = dayEvents.length - shownDots.length;
     const hasEvents = dayEvents.length > 0;
+    const first = dayEvents[0];
+    const rest = dayEvents.slice(1, 1 + MAX_DOTS);
+    const overflow = dayEvents.length - 1 - rest.length;
 
     html += '<div class="day' + (inMonth ? '' : ' other-month') + (hasEvents ? ' clickable' : '') + '" data-date="' + key + '">';
     html += '<div class="day-num' + (sameDay(cursor, today) ? ' today' : '') + '">' + cursor.getDate() + '</div>';
-    if (hasEvents) {
+    if (first) {
+      const firstColor = COLORS[(first["calendar-index"] || 0) % COLORS.length];
+      html += '<div class="event-text" style="background:' + firstColor + '22;color:' + firstColor + '">' + escapeHtml(first.text || '') + '</div>';
+    }
+    if (rest.length > 0 || overflow > 0) {
       html += '<div class="dots">';
-      shownDots.forEach(e => {
+      rest.forEach(e => {
         const color = COLORS[(e["calendar-index"] || 0) % COLORS.length];
         html += '<span class="dot-event" style="background:' + color + '"></span>';
       });
